@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState } from "react";
+import Link from "next/link";
+import { APP_NAME } from "../config";
 import {
   Collapse,
   Navbar,
@@ -11,8 +13,8 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  NavbarText
-} from 'reactstrap';
+  NavbarText,
+} from "reactstrap";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,22 +23,28 @@ const Header = () => {
 
   return (
     <div>
-      <Navbar color="light" light expand="md">
-        <NavbarBrand href="/">reactstrap</NavbarBrand>
+      <Navbar color="light" light expand="md" className="container-fluid">
+        <Link href="/">
+          <NavbarBrand>{APP_NAME}</NavbarBrand>
+        </Link>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
-            <NavItem className="ml-auto">
-              <NavLink href="/components/">Components</NavLink>
-            </NavItem>
             <NavItem>
-              <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
+              <Link href="/signin">
+                <NavLink>Signin</NavLink>
+              </Link>
+            </NavItem>
+            <NavItem className="ml-auto">
+              <Link href="/signup">
+                <NavLink>Signup</NavLink>
+              </Link>
             </NavItem>
           </Nav>
         </Collapse>
       </Navbar>
     </div>
   );
-}
+};
 
 export default Header;

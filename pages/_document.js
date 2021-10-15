@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 
+
 class MyDocument extends Document {
   render() {
     return (
@@ -14,6 +15,7 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css"
           />
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.min.js"></script>
         </Head>
         <body>
           <Main />
