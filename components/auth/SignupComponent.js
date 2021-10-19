@@ -3,9 +3,9 @@ import { signup } from '../../actions/auth';
 
 const SignupComponent = () => {
     const [values, setValues] = useState({
-        name: 'Ryan',
-        email: 'ryan@gmail.com',
-        password: 'rrrrrr',
+        name: '',
+        email: '',
+        password: '',
         error: '',
         loading: false,
         message: '',
@@ -19,7 +19,7 @@ const SignupComponent = () => {
         // console.table({ name, email, password, error, loading, message, showForm });
         setValues({ ...values, loading: true, error: false });
         const user = { name, email, password };
-        console.log(data);
+
         signup(user).then(data => {
             if (data.error) {
                 setValues({ ...values, error: data.error, loading: false });
