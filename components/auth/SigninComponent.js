@@ -1,6 +1,6 @@
-import { Router } from 'next/dist/client/router';
-import { useState } from 'react';
-import { signin } from '../../actions/auth';
+import Router from 'next/dist/client/router';
+import { useState, useEffect } from 'react';
+import { signin, authenticate, isAuth } from '../../actions/auth';
 
 const SigninComponent = () => {
     const [values, setValues] = useState({
@@ -11,6 +11,10 @@ const SigninComponent = () => {
         message: '',
         showForm: true
     });
+
+    useEffect(() => {
+      isAuth() && Router.push(`/`);
+      }, [])
 
     const { email, password, error, loading, message, showForm } = values;
 
@@ -27,7 +31,10 @@ const SigninComponent = () => {
               //save user token to cookie 
               // save user info to local storage
               //user auth
-              Router.push(`/`)
+              authenticate(data, () => {
+                Router.push(`/`);
+
+              });
             }
         });
     };
