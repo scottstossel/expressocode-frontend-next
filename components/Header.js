@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { APP_NAME } from "../config";
+import nProgress from "nprogress";
 import {
   Collapse,
   Navbar,
@@ -14,6 +15,11 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
+
+Router.onRouteChangeStart = url => nProgress.start();
+Router.onRouteChangeComplete = url => nProgress.done();
+Router.onRouteChangeError = url => nProgress.done();
+
 import { signout, isAuth } from "../actions/auth";
 import Router from "next/dist/client/router";
 
