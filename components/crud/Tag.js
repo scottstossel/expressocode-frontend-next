@@ -14,10 +14,10 @@ const Tag = () => {
   });
 
   const { name, error, success, tags, removed, reload } = values;
-  const {token} = getCookie('token');
+  const token = getCookie('token');
 
   useEffect(() => {
-    loadTags()
+    loadTags();
   },[reload]);
 
   const loadTags = () => {
@@ -83,7 +83,7 @@ const Tag = () => {
           error: false,
           success: true,
           name: "",
-          reload: !reload,
+          reload: !reload
         });
       }
     });
@@ -121,7 +121,7 @@ const Tag = () => {
     setValues({...values, error: false, success: false, removed: ''});
   }
 
-  const newTagForm = () => {
+  const newTagForm = () => (
     <form onSubmit={clickSubmit}>
       <div className="form-group">
         <label className="text-muted">Name</label>
@@ -139,7 +139,7 @@ const Tag = () => {
         </button>
       </div>
     </form>
-  }
+  )
 
   return (
     <>
