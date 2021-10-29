@@ -63,7 +63,7 @@ const SigninComponent = () => {
                     />
                 </div>
 
-                <div className="form-group">
+                <div className="form-group mt-2">
                     <input
                         value={password}
                         onChange={handleChange('password')}
@@ -74,7 +74,7 @@ const SigninComponent = () => {
                 </div>
 
                 <div>
-                    <button className="btn btn-primary">Signin</button>
+                    <button className="btn btn-primary mt-2">Signin</button>
                 </div>
             </form>
         );
