@@ -42,6 +42,7 @@ const CreateBlog = ({ router }) => {
 
   const { error, sizeError, success, formData, title, hidePublishButton } =
     values;
+  const token = getCookie('token');
 
   useEffect(() => {
     setValues({ ...values, formData: new FormData() });
@@ -71,7 +72,17 @@ const CreateBlog = ({ router }) => {
 
   const publishBlog = (e) => {
     e.preventDefault();
-    console.log("ready to publish blog");
+    // console.log("ready to publish blog");
+    createBlog(formData, token).then(data => {
+      if (data.error) {
+        setValues({...values, error: data.error})
+      } else {
+        setValues({...values, title: '', error: '', success: `A new blog title ${data.title} is created`});
+        setBody(''); //clears out local storage upon success
+        setCategories([]);
+        setTags([]);
+      }
+    })
   };
 
   const handleChange = (name) => (e) => {
@@ -91,7 +102,7 @@ const CreateBlog = ({ router }) => {
   };
 
   const handleToggle = (category) => () => {
-    setValues({...values, error: ''});
+    setValues({ ...values, error: "" });
     //need to return the first i or -1
     const clickedCategory = checked.indexOf(category);
     const all = [...checked];
@@ -103,15 +114,19 @@ const CreateBlog = ({ router }) => {
     }
     console.log(all);
     setChecked(all);
-    formData.set('categories', all);
-  }
+    formData.set("categories", all);
+  };
 
   const showCategories = () => {
     return (
       categories &&
       categories.map((category, i) => (
         <li key={i} className="list-unstyled">
-          <input onChange={handleToggle(category._id)} type="checkbox" className="mr-2" />
+          <input
+            onChange={handleToggle(category._id)}
+            type="checkbox"
+            className="mr-2"
+          />
           <label className="form-check-label">{category.name}</label>
         </li>
       ))
@@ -119,7 +134,7 @@ const CreateBlog = ({ router }) => {
   };
 
   const handleToggleTags = (tag) => () => {
-    setValues({...values, error: ''});
+    setValues({ ...values, error: "" });
     //need to return the first i or -1
     const clickedTag = checkedTag.indexOf(tag);
     const all = [...checkedTag];
@@ -131,15 +146,19 @@ const CreateBlog = ({ router }) => {
     }
     console.log(all);
     setCheckedTag(all);
-    formData.set('tags', all);
-  }
+    formData.set("tags", all);
+  };
 
   const showTags = () => {
     return (
       tags &&
       tags.map((tag, i) => (
         <li key={i} className="list-unstyled">
-          <input onChange={handleToggleTags(tag._id)} type="checkbox" className="mr-2" />
+          <input
+            onChange={handleToggleTags(tag._id)}
+            type="checkbox"
+            className="mr-2"
+          />
           <label className="form-check-label">{tag.name}</label>
         </li>
       ))
@@ -193,6 +212,26 @@ const CreateBlog = ({ router }) => {
 
         <div className="col-md-4">
           <div>
+            <div className="form-group pb-2">
+              <h5>Featured Image</h5>
+              <hr />
+              <small className="text-muted">Max size: 1mb</small>
+              <div>
+                <label className="btn btn-outline-info mt-2">
+                  Upload featured image
+                  <input
+                onChange={handleChange("photo")}
+                className="mt-2"
+                type="file"
+                accept="image/*"
+                hidden
+              />
+                </label>
+              </div>
+
+            </div>
+          </div>
+          <div>
             <h5>Categories</h5>
             <hr />
             <ul style={{ maxHeight: "200px", overflowY: "scroll" }}>
@@ -202,7 +241,9 @@ const CreateBlog = ({ router }) => {
           <div className="mt-2">
             <h5>Tags</h5>
             <hr />
-            <ul style={{maxHeight: '200px', overflowY: 'scroll'}}>{showTags()}</ul>
+            <ul style={{ maxHeight: "200px", overflowY: "scroll" }}>
+              {showTags()}
+            </ul>
           </div>
         </div>
       </div>
