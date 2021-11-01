@@ -42,7 +42,7 @@ const CreateBlog = ({ router }) => {
 
   const { error, sizeError, success, formData, title, hidePublishButton } =
     values;
-  const token = getCookie('token');
+  const token = getCookie("token");
 
   useEffect(() => {
     setValues({ ...values, formData: new FormData() });
@@ -73,16 +73,21 @@ const CreateBlog = ({ router }) => {
   const publishBlog = (e) => {
     e.preventDefault();
     // console.log("ready to publish blog");
-    createBlog(formData, token).then(data => {
+    createBlog(formData, token).then((data) => {
       if (data.error) {
-        setValues({...values, error: data.error})
+        setValues({ ...values, error: data.error });
       } else {
-        setValues({...values, title: '', error: '', success: `A new blog title ${data.title} is created`});
-        setBody(''); //clears out local storage upon success
+        setValues({
+          ...values,
+          title: "",
+          error: "",
+          success: `A new blog title ${data.title} is created`,
+        });
+        setBody(""); //clears out local storage upon success
         setCategories([]);
         setTags([]);
       }
-    })
+    });
   };
 
   const handleChange = (name) => (e) => {
@@ -165,6 +170,25 @@ const CreateBlog = ({ router }) => {
     );
   };
 
+  const showError = () => (
+    //if no error, no display else display error
+    <div
+      className="alert alert-danger"
+      style={{ display: error ? "" : "none" }}
+    >
+      {error}
+    </div>
+  );
+
+  const showSuccess = () => (
+    <div
+      className="alert alert-success"
+      style={{ display: success ? "" : "none" }}
+    >
+      {success}
+    </div>
+  );
+
   const createBlogForm = () => {
     return (
       <form onSubmit={publishBlog}>
@@ -196,18 +220,14 @@ const CreateBlog = ({ router }) => {
     );
   };
   return (
-    <div className="container-fluid">
+    <div className="container-fluid pb-5">
       <div className="row">
         <div className="col-md-8">
           {createBlogForm()}
-          <hr />
-          {JSON.stringify(title)}
-          <hr />
-          {JSON.stringify(body)}
-          <hr />
-          {JSON.stringify(categories)}
-          <hr />
-          {JSON.stringify(tags)}
+          <div className="mt-3">
+            {showError()}
+            {showSuccess()}
+          </div>
         </div>
 
         <div className="col-md-4">
@@ -220,15 +240,14 @@ const CreateBlog = ({ router }) => {
                 <label className="btn btn-outline-info mt-2">
                   Upload featured image
                   <input
-                onChange={handleChange("photo")}
-                className="mt-2"
-                type="file"
-                accept="image/*"
-                hidden
-              />
+                    onChange={handleChange("photo")}
+                    className="mt-2"
+                    type="file"
+                    accept="image/*"
+                    hidden
+                  />
                 </label>
               </div>
-
             </div>
           </div>
           <div>
