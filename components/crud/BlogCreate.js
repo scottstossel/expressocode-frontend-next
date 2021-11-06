@@ -9,6 +9,7 @@ import { getTags } from "../../actions/tagActions";
 import { createBlog } from "../../actions/blogActions";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "../../node_modules/react-quill/dist/quill.snow.css";
+import { QuillModules, QuillFormats } from "../../helpers/quill";
 
 const CreateBlog = ({ router }) => {
   const blogFromLS = () => {
@@ -203,8 +204,8 @@ const CreateBlog = ({ router }) => {
         </div>
         <div className="form-group mt-2">
           <ReactQuill
-            modules={CreateBlog.modules}
-            formats={CreateBlog.formats}
+            modules={QuillModules}
+            formats={QuillFormats}
             value={body}
             placeholder="Type something amazing..."
             onChange={handleBody}
@@ -269,34 +270,5 @@ const CreateBlog = ({ router }) => {
     </div>
   );
 };
-
-CreateBlog.modules = {
-  toolbar: [
-    [{ header: "1" }, { header: "2" }, { header: [3, 4, 5, 6] }, { font: [] }],
-    [{ size: [] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["link", "image", "video"],
-    ["clean"],
-    ["code-block"],
-  ],
-};
-
-CreateBlog.formats = [
-  "header",
-  "font",
-  "size",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "link",
-  "image",
-  "video",
-  "code-block",
-];
 
 export default withRouter(CreateBlog);

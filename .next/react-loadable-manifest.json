@@ -1,10 +1,4 @@
 {
-  "..\\components\\crud\\BlogCreate.js -> react-quill": {
-    "id": "./node_modules/react-quill/lib/index.js",
-    "files": [
-      "static/chunks/node_modules_react-quill_lib_index_js.js"
-    ]
-  },
   "..\\node_modules\\next\\dist\\client\\next-dev.js -> ./dev/noop": {
     "id": "./node_modules/next/dist/client/dev/noop.js",
     "files": [
