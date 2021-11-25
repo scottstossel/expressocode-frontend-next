@@ -4,44 +4,35 @@ import Layout from "../../components/Layout";
 import { useState } from "react";
 import { listBlogsWithCategoriesAndTags } from "../../actions/blogActions";
 import { API } from "../../config";
-import renderHTML from 'react-render-html';
+import renderHTML from "react-render-html";
 import moment from "moment";
+import Card from "../../components/blog/Card";
 
 const Blogs = ({ blogs, categories, tags, size }) => {
+  const showAllCategories = () => {
+    return categories.map((c, i) => (
+      <Link href={`/categories/${c.slug}`} key={i}>
+        <a className="btn btn-primary mt-3" style={{ marginRight: "5px" }}>
+          {c.name}
+        </a>
+      </Link>
+    ));
+  };
+  const showAllTags = () => {
+    return tags.map((t, i) => (
+      <Link href={`/tags/${t.slug}`} key={i}>
+        <a className="btn btn-outline-primary mt-3" style={{ marginRight: "5px" }}>
+          {t.name}
+        </a>
+      </Link>
+    ));
+  };
+
   const showAllBlogs = () => {
     return blogs.map((blog, i) => (
       <>
         <article key={i} className="lead pb-4">
-          <div className="lead">
-            <header>
-              <Link href={`/blogs/${blog.slug}`}>
-                <a>
-                  <h2 className="pt-3 pb-3 font-weight-bold">{blog.title}</h2>
-                </a>
-              </Link>
-            </header>
-            <section>
-              <p className="mark ml-1 pt-2 pb2">
-                Written by {blog.postedBy.name} | Published {moment(blog.updatedAt).fromNow()}
-              </p>
-            </section>
-            <section>
-              <p>Blog categories and tags</p>
-            </section>
-            <div className="row">
-              <div className="col-md-4">image</div>
-              <div className="col-md-8">
-                <section>
-                <div className="pb-3">
-                  {renderHTML(blog.excerpt)}
-                </div>
-                  <Link href={`/blogs/${blog.slug}`}>
-                    <a className="btn btn-primary pt-2">Read more</a>
-                  </Link>
-                </section>
-              </div>
-            </div>
-          </div>
+          <Card blog={blog} />
           <hr />
         </article>
       </>
@@ -59,7 +50,11 @@ const Blogs = ({ blogs, categories, tags, size }) => {
                 </h1>
               </div>
               <section>
-                <p>show categories and tags</p>
+                <div className="pb-5 text-center">
+                  {showAllCategories()}
+                  <br />
+                  {showAllTags()}
+                </div>
               </section>
             </header>
           </div>
