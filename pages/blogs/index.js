@@ -7,10 +7,23 @@ import { listBlogsWithCategoriesAndTags } from "../../actions/blogActions";
 import renderHTML from "react-render-html";
 import moment from "moment";
 import Card from "../../components/blog/Card";
-import { API, DOMAIN, APP_NAME } from "../../config";
+import { API, DOMAIN, APP_NAME, FB_APP_ID } from "../../config";
 import { withRouter } from "next/router";
 
-const Blogs = ({ blogs, categories, tags, size, router }) => {
+const Blogs = ({
+  blogs,
+  categories,
+  tags,
+  totalBlogs,
+  blogsLimit,
+  blogSkip,
+  router,
+}) => {
+  const [limit, setLimit] = useState(blogsLimit);
+  const [skip, setSkip] = useState(0);
+  const [size, setSize] = useState(totalBlogs);
+  const [loadedBlogs, setLoadedBlogs] = useState([]);
+
   const head = () => (
     <Head>
       <title>Programming blogs | {APP_NAME}</title>
@@ -18,19 +31,22 @@ const Blogs = ({ blogs, categories, tags, size, router }) => {
         name="description"
         content="Programming blogs and tutorials on react node next vue php laravel and web development"
       />
-      <link rel="canonical" href={`${DOMAIN}${router.pathname}`} />
+      <link rel="canonical" href={`${DOMAIN}${router}`} />
       <meta
         property="og:title"
         content={`Your digital hangout for all things programming related | ${APP_NAME}`}
       />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`${DOMAIN}${router.pathname}`} />
+      <meta property="og:url" content={`${DOMAIN}${router}`} />
       <meta property="og:site_name" content={`${APP_NAME}`} />
-      
-      <meta property="og:image" content={`${APP_NAME}`} />
-      <meta property="og:image:secure_url" content={`${APP_NAME}`} />
-      <meta property="og:image:type" content={`${APP_NAME}`} />
-      <meta property="fb:app_id" content={`${APP_NAME}`} />
+
+      <meta property="og:image" content="../../static/images/logo.png" />
+      <meta
+        property="og:image:secure_url"
+        content="../../static/images/logo.png"
+      />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="fb:app_id" content={`${FB_APP_ID}`} />
     </Head>
   );
 
@@ -56,6 +72,30 @@ const Blogs = ({ blogs, categories, tags, size, router }) => {
     ));
   };
 
+  const loadMore = async () => {
+    let toSkip = skip + limit;
+    listBlogsWithCategoriesAndTags(toSkip, limit).then((data) => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setLoadedBlogs([...loadedBlogs, ...data.blogs]);
+        setSize(data.size);
+        setSkip(skip);
+      }
+    });
+  };
+
+  const loadMoreButton = () => {
+    return (
+      size > 0 &&
+      size >= limit && (
+        <button onClick={loadMore} className="btn btn-primary btn-lg">
+          Load More
+        </button>
+      )
+    );
+  };
+
   const showAllBlogs = () => {
     return blogs.map((blog, i) => (
       <>
@@ -66,8 +106,18 @@ const Blogs = ({ blogs, categories, tags, size, router }) => {
       </>
     ));
   };
+
+  const showLoadedBlogs = () => {
+    return loadedBlogs.map((blog, i) => (
+      <article key={i}>
+        <Card blog={blog} />
+      </article>
+    ))
+  }
+  
   return (
     <>
+      {head()}
       <Layout>
         <main>
           <div className="container-fluid">
@@ -87,7 +137,17 @@ const Blogs = ({ blogs, categories, tags, size, router }) => {
             </header>
           </div>
           <div className="container-fluid">
-            <div className="col-md-12">{showAllBlogs()}</div>
+
+            {showAllBlogs()}
+            {showLoadedBlogs()}
+            {loadMoreButton()}
+
+          </div>
+          <div className="container-fluid">
+            {showLoadedBlogs()}
+          </div>
+          <div className="container-fluid pt'5 pb'5">
+            {loadMore()}
           </div>
         </main>
       </Layout>
@@ -96,6 +156,8 @@ const Blogs = ({ blogs, categories, tags, size, router }) => {
 };
 
 Blogs.getInitialProps = () => {
+  let skip = 0;
+  let limit = 2;
   return listBlogsWithCategoriesAndTags().then((data) => {
     if (data.error) {
       console.log(data.error);
@@ -104,7 +166,9 @@ Blogs.getInitialProps = () => {
         blogs: data.blogs,
         categories: data.categories,
         tags: data.tags,
-        size: data.size,
+        totalBlogs: data.size,
+        blogsLimit: limit,
+        blogSkip: skip,
       };
     }
   });
